@@ -92,7 +92,7 @@ func (f *FCM) Send(message Message) (Response, error) {
 	// always read the whole body
 	body, err := ioutil.ReadAll(resp.Body)
 	if resp.StatusCode != 200 {
-		return response, fmt.Errorf("%d status code. Body: %s", resp.StatusCode, string(body))
+		return response, fmt.Errorf("%d status code.", resp.StatusCode)
 	}
 	
 	if err != nil {
