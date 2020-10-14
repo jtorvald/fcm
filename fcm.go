@@ -91,6 +91,23 @@ func (f *FCM) Send(message Message) (Response, error) {
 
 	// always read the whole body
 	body, err := ioutil.ReadAll(resp.Body)
+	if resp.StatusCode == 502 {
+		msg := "\n- failed request with 501 ----------------------\n"
+		reqBody, _ := req.GetBody()
+		readReqBody, _ := ioutil.ReadAll(reqBody)
+		for name, value := range req.Header {
+			msg += fmt.Sprintf("%s: %s\n", name, value)
+		}
+		msg += "\n" + string(readReqBody)
+		msg += "-> response: ->\n"
+
+		for name, value := range resp.Header {
+			msg += fmt.Sprintf("%s: %s\n", name, value)
+		}
+		respBody, _ := ioutil.ReadAll(resp.Body)
+		msg += "\n" + string(respBody)
+		msg += "/-----------------------------------------------\n\n"
+	}
 	if resp.StatusCode != 200 {
 		return response, fmt.Errorf("%d status code.", resp.StatusCode)
 	}
