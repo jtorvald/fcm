@@ -107,6 +107,7 @@ func (f *FCM) Send(message Message) (Response, error) {
 		respBody, _ := ioutil.ReadAll(resp.Body)
 		msg += "\n" + string(respBody)
 		msg += "/-----------------------------------------------\n\n"
+		fmt.Println(msg)
 	}
 	if resp.StatusCode != 200 {
 		return response, fmt.Errorf("%d status code.", resp.StatusCode)
