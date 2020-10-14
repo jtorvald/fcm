@@ -89,15 +89,16 @@ func (f *FCM) Send(message Message) (Response, error) {
 		response.RetryAfter = resp.Header.Get(HeaderRetryAfter)
 	}
 
-	if resp.StatusCode != 200 {
-		return response, fmt.Errorf("%d status code", resp.StatusCode)
-	}
-
+	// always read the whole body
 	body, err := ioutil.ReadAll(resp.Body)
+	if resp.StatusCode != 200 {
+		return response, fmt.Errorf("%d status code. Body: %s", resp.StatusCode, string(body))
+	}
+	
 	if err != nil {
 		return response, err
 	}
-
+	
 	if err := json.Unmarshal(body, &response); err != nil {
 		return response, err
 	}
